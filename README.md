@@ -4,7 +4,7 @@ This repository is dedicated to programs written for the book Modelling Infectio
 
 I have authored the Python scripts to run the models and offered them to the authors, who they kindly decided to add them to the supplementary material website (http://modelinginfectiousdiseases.org/). I was also keeping up-to-date on a personal website which does not exist anymore.
 
-Given the current situation and the increases interest in zoonoses, transmission and infectious diseases, I decided to revamp the code and create this repository for public interest.
+Given the current situation and the increased interest in zoonoses, transmission and infectious diseases, I decided to revamp the code and create this repository for public interest.
 
 I have added the original Python 2 scripts to this repository and my plan is to update them to Python 3 and add explanatory jupyter notebooks, so everything is more tidy up.
 
