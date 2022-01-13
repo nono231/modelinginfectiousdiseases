@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+
+####################################################################
+###    This is the PYTHON version of program 4.4 from page 136 of  #
+### "Modeling Infectious Disease in humans and animals"            #
+### by Keeling & Rohani.										   #
+###																   #
+### It is a simple model of vector borne transmission of infection.#
+### We implicitly assume a vector-notation, which humans being the #
+### first entry and mosquitoes being the second.                   #
+### n the default parameterisation of the model mosquitoes never   #
+### recover from infection, although this is allowed by the 	   #
+### general formulation.                                           #
+####################################################################
+
+###################################
+### Written by Ilias Soumpasis    #
+### ilias.soumpasis@ucd.ie (work) #
+### ilias.soumpasis@gmail.com	  #
+###################################
+
+# Environment Preparation
+import scipy.integrate as spi
+import numpy as np
+import pylab as pl
+
+# Parameters
+r=0.5/1e3;
+beta=np.array([[0, 0.5], [0.8, 0]]);
+gamma=np.array([0.033, 0]);
+mu=np.array([5.5e-5, 0.143]);
+nu=np.array([5.5e-2, 1.443e3]);
+X0=np.array([1e3, 1e4]);
+Y0=np.array([1, 1]);
+ND=MaxTime=1000.0;
+TS=1.0
+
+INPUT=np.hstack((X0,Y0))
+
+# Model Defintion
+def diff_eqs(INP,t):
+	'''The main set of equations'''
+	Y=np.zeros((4))
+	V = INP
+	Y[0] = nu[0] - V[0] * r * (beta[0][1]*V[3]) - mu[0] * V[0]
+	Y[1] = nu[1] - V[1] * r * (beta[1][0]*V[2]) - mu[1] * V[1]
+	Y[2] = V[0] * r * (beta[0][1]*V[3]) - gamma[0] * V[2] - mu[0] * V[2]
+	Y[3] = V[1] * r * (beta[1][0]*V[2]) - mu[1] * V[3]
+	return Y   # For odeint
+
+# Model Run
+t_start = 0.0; t_end = ND; t_inc = TS
+t_range = np.arange(t_start, t_end+t_inc, t_inc)
+RES = spi.odeint(diff_eqs,INPUT,t_range)
+
+# Print Results
+print (RES)
+
+#Ploting
+pl.figure(figsize=(16, 8))
+pl.subplot(311)
+pl.subplot(221)
+pl.semilogy(RES[:,0], 'g', label='SH')
+pl.xlabel('Time')
+pl.ylabel('Susceptible Humans')
+pl.subplot(222)
+pl.semilogy(RES[:,1], 'g', label='SM')
+pl.xlabel('Time')
+pl.ylabel('Susceptible Mosquitoes')
+pl.subplot(223)
+pl.semilogy(RES[:,2], 'r', label='IH')
+pl.xlabel('Time')
+pl.ylabel('Infected Humans')
+pl.subplot(224)
+pl.semilogy(RES[:,3], 'r', label='IM')
+pl.xlabel('Time')
+pl.ylabel('Infected Mosquitoes')
+pl.savefig('Program_4_4.png')
+pl.show()
