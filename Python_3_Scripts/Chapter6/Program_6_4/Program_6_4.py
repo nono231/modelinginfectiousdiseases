@@ -28,7 +28,7 @@ import pylab as pl
 beta=1.0
 gamma=1/10.0
 mu=5e-4
-N0=50.0
+N0=5000.0
 ### You may want to try with popylation size of 50 (small) to see the events
 ### In this case uncomment the next line
 #N0=50.0
