@@ -133,6 +133,7 @@ if video==1:
         if k%1==0:
             pl.clf()
             tc22=np.reshape(RES[-1][ola1], (n,n))
+            pl.figure(figsize=(16, 8))
             pl.subplot(211)
             pl.pcolor(tc22, cmap=pl.cm.plasma)
             pl.title('Coupled Lattice Model')
@@ -158,7 +159,8 @@ if video==1:
     ## Select different video speed
 #    os.system('mencoder "mf://movie/*.png" -mf fps=5:type=png -ovc lavc -lavcopts vcodec=wmv1 -of avi -o movie/movie_very_slow.avi')
 #    os.system('mencoder "mf://movie/*.png" -mf fps=10:type=png -ovc lavc -lavcopts vcodec=wmv1 -of avi -o movie/movie_slow.avi')
-    os.system('mencoder "mf://movie/*.png" -mf fps=25:type=png -ovc lavc -lavcopts vcodec=wmv1 -of avi -o movie/movie_fast.avi')
+    # os.system('mencoder "mf://movie/*.png" -mf fps=25:type=png -ovc lavc -lavcopts vcodec=wmv1 -of avi -o movie/movie_fast.avi')
+    os.system("ffmpeg -framerate 25 -pattern_type glob -i 'movie/*.png' -c:v libx264 -r 30 -pix_fmt yuv420p movie/movie.mp4")
     print('Convertion completed. Hope it worked...')
     ## Delete images to save work space
     os.system('rm movie/*.png')
@@ -167,7 +169,7 @@ if video==1:
 
 else:
     ### You could also try plotting at each step but it is slow
-    pl.ion()
+    # pl.ion()
     for k in range(ND):
         t_range = np.arange(2.0)
         RES = spi.odeint(diff_eqs,INPUT,t_range)
@@ -175,29 +177,24 @@ else:
 
         tcS.append(sum(RES[-1][ola]))
         tcI.append(sum(RES[-1][ola1]))
+        print (k)
 
-        ### Changing the k%50 parameter you change the frames you are watching
-        ###  With 1 you can see all the graphs
-        if k%10==0:
-            pl.clf()
-            tc22=np.reshape(RES[-1][ola1], (n,n))
-            pl.subplot(211)
-            pl.pcolor(tc22, cmap=pl.cm.plasma)
-            pl.title('Coupled Lattice Model')
-            pl.colorbar()
 
-            pl.subplot(413)
-            pl.plot(tcS, color='b')
-            pl.ylabel('Susceptible')
+    tc22=np.reshape(RES[-1][ola1], (n,n))
+    pl.figure(figsize=(16, 8))
+    pl.subplot(211)
+    pl.pcolor(tc22, cmap=pl.cm.plasma)
+    pl.title('Coupled Lattice Model')
+    pl.colorbar()
 
-            pl.subplot(414)
-            pl.plot(tcI, color='r')
-            pl.ylabel('Infected')
-            pl.xlabel('Time (days)')
+    pl.subplot(413)
+    pl.plot(tcS, color='b')
+    pl.ylabel('Susceptible')
 
-            ### watch the progress
-            print (k)
-            pl.draw()
-    pl.ioff()
+    pl.subplot(414)
+    pl.plot(tcI, color='r')
+    pl.ylabel('Infected')
+    pl.xlabel('Time (days)')
+
     pl.savefig("Program_7_3.png")
     pl.show()
