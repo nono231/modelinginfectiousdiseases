@@ -20,6 +20,7 @@ import scipy.integrate as spi
 import numpy as np
 import pylab as pl
 import time, os
+from tqdm import tqdm
 
 ### Select if you want to make a video (faster way)
 #video=1
@@ -170,14 +171,14 @@ if video==1:
 else:
     ### You could also try plotting at each step but it is slow
     # pl.ion()
-    for k in range(ND):
+    for k in tqdm(range(ND)):
         t_range = np.arange(2.0)
         RES = spi.odeint(diff_eqs,INPUT,t_range)
         INPUT=RES[-1]
 
         tcS.append(sum(RES[-1][ola]))
         tcI.append(sum(RES[-1][ola1]))
-        print (k)
+        # print (k)
 
 
     tc22=np.reshape(RES[-1][ola1], (n,n))

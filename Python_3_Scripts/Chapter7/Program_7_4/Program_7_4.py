@@ -19,6 +19,7 @@ import scipy.integrate as spi
 import numpy as np
 import pylab as pl
 import time, os
+from tqdm import tqdm 
 
 ### Select if you want to make a video (faster way)
 #video=1
@@ -121,12 +122,16 @@ if video==1:
 else:
     ### You could also try plotting at each step but it is slow
     k=0
-    while t <= ND:
+    def generator():
+        while t <= ND:
+            yield()
+            
+    for _ in tqdm(generator()):
         [Grid, X, Y, timestep] = diff_eqs(Grid,timestep)
         t+=timestep
         T.append(t)
         k+=1
-        print (k)
+        # print (k)
 
 
     pl.figure(figsize=(16, 8))
